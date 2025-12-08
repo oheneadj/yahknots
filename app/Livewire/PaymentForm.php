@@ -95,8 +95,7 @@ class PaymentForm extends Component
                 $this->paymentStatus = 'success';
             } elseif ($transaction->status === 'failed') {
                 $this->paymentStatus = 'error';
-                // If the controller updated the message, use it. Otherwise map the code.
-                $this->errorMessage = $transaction->message ?? $this->getFailureMessage($transaction->response_code);
+                $this->errorMessage = $this->getFailureMessage($transaction->response_code);
             }
         }
     }
