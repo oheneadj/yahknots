@@ -72,21 +72,7 @@ class PaymentForm extends Component
 
             $this->response = $response->json();
 
-            // $transaction->update([
-            //     'status' => $response->successful() && isset($this->response['responseCode']) && $this->response['responseCode'] === '0001' ? 'success' : 'failed',
-            //     'response_code' => $response->status(),
-            //     'response_body' => $this->response,
-            //     'transaction_id' => $this->response['data']['transactionId'] ?? null,
-            // ]);
-
-            // if ($transaction->status === 'success') {
-            //     $this->paymentStatus = 'success';
-            // } else {
-            //     $this->paymentStatus = 'error';
-            //     $this->errorMessage = 'Payment failed. Please try again or check your details.';
-            //     $this->detailedError = 'Status: ' . $response->status() . ' - Body: ' . $response->body();
-            //     // Log::error('Payment failed', ['response' => $response->body()]);
-            // }
+          
 
         } catch (\Throwable $th) {
             $this->paymentStatus = 'error';
@@ -104,9 +90,44 @@ class PaymentForm extends Component
 
         $transaction = Transaction::where('client_reference', $this->clientReference)->first();
 
-        if ($transaction && $transaction->status === 'success') {
-            $this->paymentStatus = 'success';
+        if ($transaction) {
+            if ($transaction->status === 'success') {
+                $this->paymentStatus = 'success';
+            } elseif ($transaction->status === 'failed') {
+                $this->paymentStatus = 'error';
+                // If the controller updated the message, use it. Otherwise map the code.
+                $this->errorMessage = $transaction->message ?? $this->getFailureMessage($transaction->response_code);
+            }
         }
+    }
+
+    private function getFailureMessage($code)
+    {
+        $failureMap = [
+            '0005' => 'Service error. Please contact support if money was deducted.',
+            '2001' => 'Transaction failed. Invalid PIN, timeout, or format error.',
+            '2100' => 'The customer phone is switched off.',
+            
+            // Airtel
+            '2101' => 'Invalid PIN. Please check and try again.',
+            '2102' => 'Insufficient funds in Airtel wallet.',
+            '2103' => 'Number not registered on Airtel Money.',
+            
+            // MTN
+            '2050' => 'Insufficient funds in Mobile Money wallet. Please top up.',
+            '2051' => 'Number not registered on MTN Mobile Money.',
+            
+            // Tigo
+            '2152' => 'Number not registered on Tigo Cash.',
+            '2153' => 'Amount exceeds maximum allowed.',
+            '2154' => 'Amount exceeds daily limit.',
+            
+            // General
+            '4000' => 'Validation Error. Please check your details.',
+            '4004' => 'Session expired. Please try again.',
+        ];
+
+        return $failureMap[$code] ?? 'Payment failed. Please try again or check your details.';
     }
 
     /**
