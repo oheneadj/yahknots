@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -10,6 +11,9 @@ use Laravel\Fortify\Features;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/payment', [PaymentController::class,'index'])->name('payment');
+
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
