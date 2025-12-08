@@ -78,6 +78,9 @@
                      </div>
                      <div class="flex-1">
                         <p class="text-sm text-red-800 font-bold">{{ $errorMessage }}</p>
+                        <p class="text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
+                            {{ json_encode($response) }}
+                        </p>
                         @if(!app()->environment('production') && $detailedError)
                             <div class="mt-2 text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
                                 {{ $detailedError }}

@@ -72,7 +72,22 @@ class PaymentForm extends Component
 
             $this->response = $response->json();
 
-          
+            // Update transaction with immediate response
+            $transaction->update([
+                'status' => $response->successful() && isset($this->response['responseCode']) && $this->response['responseCode'] === '0001' ? 'success' : 'failed',
+                'response_code' => $this->response['responseCode'] ?? $response->status(),
+                'response_body' => $this->response,
+                'transaction_id' => $this->response['data']['transactionId'] ?? null,
+            ]);
+
+            if ($transaction->status === 'success') {
+                $this->paymentStatus = 'success';
+            } else {
+                $this->paymentStatus = 'error';
+                $responseCode = $this->response['responseCode'] ?? null;
+                $this->errorMessage = $this->getFailureMessage($responseCode);
+                $this->detailedError = 'Status: ' . $response->status() . ' - Body: ' . $response->body();
+            }
 
         } catch (\Throwable $th) {
             $this->paymentStatus = 'error';
@@ -104,7 +119,7 @@ class PaymentForm extends Component
     {
         $failureMap = [
             '0005' => 'Service error. Please contact support if money was deducted.',
-            '2001' => 'Transaction failed. Invalid PIN, timeout, or format error.',
+            '2001' => 'Transaction failed. Invalid PIN, timeout, or insufficient funds.',
             '2100' => 'The customer phone is switched off.',
             
             // Airtel
