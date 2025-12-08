@@ -13,6 +13,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/payment', [PaymentController::class,'index'])->name('payment');
+Route::post('/payment/callback', [\App\Http\Controllers\PaymentController::class, 'handleCallback'])->name('payment.callback');
 
 
 Route::view('dashboard', 'dashboard')

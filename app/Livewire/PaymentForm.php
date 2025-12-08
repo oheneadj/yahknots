@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use App\Models\Transaction;
 
 class PaymentForm extends Component
 {
@@ -12,6 +13,7 @@ class PaymentForm extends Component
     public $network;
     public $amount;
     public $message;
+    public $clientReference;
     public $response = [];
     public $paymentStatus = 'pending'; // pending, success, error
     public $errorMessage = '';
@@ -40,7 +42,20 @@ class PaymentForm extends Component
             $description .= ": " . $this->message;
         }
 
+        $this->clientReference = uniqid('UMB_', true);
+
         try {
+            // Create pending transaction
+            $transaction = Transaction::create([
+                'client_reference' => $this->clientReference,
+                'customer_name' => $this->name,
+                'customer_number' => $this->number,
+                'network' => $this->network,
+                'amount' => $this->amount,
+                'message' => $this->message,
+                'status' => 'pending',
+            ]);
+
             // TODO: Move the API Key to your .env file for security
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
@@ -50,27 +65,47 @@ class PaymentForm extends Component
                 "customerNumber" => $this->formatPhoneNumber($this->number),
                 "channel" => $this->network,
                 "amount" => (float) $this->amount,
-                "callbackUrl" => "https://webhook.site/c847b68b-a3db-4c9a-8f8c-c895d1d463b4",
+                "callbackUrl" => route('payment.callback'),
                 "description" => substr($description, 0, 100),
-                "clientReference" => uniqid('UMB_', true)
+                "clientReference" => $this->clientReference
             ]);
 
             $this->response = $response->json();
 
-            if ($response->successful() && isset($this->response['responseCode']) && $this->response['responseCode'] === '0001') {
-                $this->paymentStatus = 'success';
-            } else {
-                $this->paymentStatus = 'error';
-                $this->errorMessage = 'Payment failed. Please try again or check your details.';
-                $this->detailedError = 'Status: ' . $response->status() . ' - Body: ' . $response->body();
-                 Illuminate\Support\Facades\Log::error('Payment failed', ['response' => $response->body()]);
-            }
+            // $transaction->update([
+            //     'status' => $response->successful() && isset($this->response['responseCode']) && $this->response['responseCode'] === '0001' ? 'success' : 'failed',
+            //     'response_code' => $response->status(),
+            //     'response_body' => $this->response,
+            //     'transaction_id' => $this->response['data']['transactionId'] ?? null,
+            // ]);
+
+            // if ($transaction->status === 'success') {
+            //     $this->paymentStatus = 'success';
+            // } else {
+            //     $this->paymentStatus = 'error';
+            //     $this->errorMessage = 'Payment failed. Please try again or check your details.';
+            //     $this->detailedError = 'Status: ' . $response->status() . ' - Body: ' . $response->body();
+            //     // Log::error('Payment failed', ['response' => $response->body()]);
+            // }
 
         } catch (\Throwable $th) {
             $this->paymentStatus = 'error';
             $this->errorMessage = 'An unexpected error occurred. Please try again later.';
             $this->detailedError = $th->getMessage();
             $this->response = ['error' => $th->getMessage()];
+        }
+    }
+
+    public function checkTransactionStatus()
+    {
+        if (! $this->clientReference) {
+            return;
+        }
+
+        $transaction = Transaction::where('client_reference', $this->clientReference)->first();
+
+        if ($transaction && $transaction->status === 'success') {
+            $this->paymentStatus = 'success';
         }
     }
 
@@ -104,6 +139,6 @@ class PaymentForm extends Component
 
     public function resetForm()
     {
-        $this->reset(['name', 'number', 'network', 'amount', 'message', 'response', 'paymentStatus', 'errorMessage', 'detailedError']);
+        $this->reset(['name', 'number', 'network', 'amount', 'message', 'response', 'paymentStatus', 'errorMessage', 'detailedError', 'clientReference']);
     }
 }

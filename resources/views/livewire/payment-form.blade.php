@@ -1,18 +1,19 @@
-<div class="min-h-screen flex items-center justify-center py-6 sm:px-4 lg:px-8 dark:bg-neutral-900">
-    <div class="max-w-md w-full dark:bg-neutral-800 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xs border border-orange-100 dark:border-neutral-700 overflow-hidden">
+<div class="min-h-screen flex items-center justify-center py-6 sm:px-4 lg:px-8">
+    <div class="max-w-md w-full bg-white/95 backdrop-blur-sm rounded-2xl shadow-xs border border-orange-100 overflow-hidden"
+    @if($clientReference && $paymentStatus !== 'success') wire:poll.3s="checkTransactionStatus" @endif>
         
         @if($paymentStatus === 'success')
         <!-- Success State -->
         <div class="px-6 py-8 flex flex-col items-center justify-center text-center">
-            <div class="h-24 w-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 animate-bounce">
-                <svg class="h-12 w-12 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
+                <svg class="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white font-serif mb-3 tracking-wide">
+            <h2 class="text-3xl font-bold text-gray-900 font-serif mb-3 tracking-wide">
                 Thank You!
             </h2>
-            <p class="text-lg text-gray-600 dark:text-gray-300 font-medium mb-8">
+            <p class="text-lg text-gray-600 font-medium mb-8">
                 Your contribution has been received with love.
             </p>
             <button type="button" wire:click="resetForm" class="text-sm text-[#d9aa6c] hover:text-[#c4965b] font-bold uppercase tracking-widest underline decoration-2 underline-offset-4 transition-colors">
@@ -21,38 +22,37 @@
         </div>
         @else
         <!-- Header -->
-        <div class="px-6 py-6 border-b border-orange-100 dark:border-neutral-700 bg-orange-50/50 dark:bg-neutral-800/50">
+        <div class="px-6 py-6 border-b border-orange-100 bg-orange-50/50">
             <div class="flex items-center gap-4">
-                <div class="h-10 w-10 bg-[#FFDAB9] dark:bg-orange-900/40 rounded-full flex items-center justify-center shrink-0 shadow-sm border border-orange-200">
-                    <svg class="h-5 w-5 text-gray-800 dark:text-orange-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="h-10 w-10 bg-[#FFDAB9] rounded-full flex items-center justify-center shrink-0 shadow-sm border border-orange-200">
+                    <svg class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white font-serif tracking-wide">
+                    <h2 class="text-xl font-bold text-gray-900 font-serif tracking-wide">
                         Wedding Contribution
                     </h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                    <p class="text-sm text-gray-500 font-medium">
                         Thank you for celebrating with us.
                     </p>
-                      {{ json_encode($response) }}
                 </div>
             </div>
         </div>
 
         <div class="p-6">
             @if($paymentStatus === 'error')
-            <div class="mb-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/50 rounded-xl p-4 animate-pulse">
+            <div class="mb-6 bg-red-50 border border-red-100 rounded-xl p-4 animate-pulse">
                 <div class="flex items-start gap-3">
                      <div class="shrink-0 mt-0.5">
-                        <svg class="h-5 w-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                      </div>
                      <div class="flex-1">
-                        <p class="text-sm text-red-800 dark:text-red-200 font-bold">{{ $errorMessage }}</p>
+                        <p class="text-sm text-red-800 font-bold">{{ $errorMessage }}</p>
                         @if(!app()->environment('production') && $detailedError)
-                            <div class="mt-2 text-xs text-red-600 dark:text-red-400 font-mono break-all bg-red-100/50 dark:bg-red-900/20 p-2 rounded border border-red-200 dark:border-red-800">
+                            <div class="mt-2 text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
                                 {{ $detailedError }}
                             </div>
                         @endif
@@ -65,7 +65,7 @@
                 
                 <!-- Network Selection -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 tracking-wide">
+                    <label class="block text-sm font-semibold text-gray-700 mb-3 tracking-wide">
                         Select Network
                     </label>
                     <div class="grid grid-cols-3 gap-3">
@@ -76,7 +76,7 @@
                         ] as $value => $image)
                             <button type="button" 
                                 wire:click="$set('network', '{{ $value }}')"
-                                class="relative flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all duration-200 focus:outline-none aspect-[4/3] overflow-hidden {{ $network === $value ? 'border-[#FFDAB9] ring-2 ring-[#FFDAB9]/50 shadow-md transform scale-[1.02]' : 'border-gray-200 dark:border-neutral-700 hover:border-orange-200 opacity-80 hover:opacity-100 bg-white dark:bg-neutral-800' }}">
+                                class="relative flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all duration-200 focus:outline-none aspect-[4/3] overflow-hidden {{ $network === $value ? 'border-[#FFDAB9] ring-2 ring-[#FFDAB9]/50 shadow-md transform scale-[1.02]' : 'border-gray-200 hover:border-orange-200 opacity-80 hover:opacity-100 bg-white' }}">
                                 
                                 <img src="{{ $image }}" alt="{{ $value }}" class="w-full h-full object-contain object-center rounded-lg">
                                 
@@ -93,7 +93,7 @@
                         @endforeach
                     </div>
                     @error('network') 
-                        <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse font-medium">{{ $message }}</p> 
+                        <p class="mt-2 text-xs text-red-600 animate-pulse font-medium">{{ $message }}</p> 
                     @enderror
                 </div>
 
@@ -101,35 +101,35 @@
                 <div class="space-y-5">
                     <!-- Name Field -->
                     <div class="group">
-                        <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 tracking-wide">
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-1.5 tracking-wide">
                             Full Name
                         </label>
                         <input wire:model="name" type="text" id="name" 
-                            class="block w-full px-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white sm:text-sm transition-all duration-200 @error('name') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
+                            class="block w-full px-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 sm:text-sm transition-all duration-200 @error('name') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
                             placeholder="e.g. Ama Badu">
                         @error('name') 
-                            <p class="mt-1 text-xs text-red-600 dark:text-red-400 font-medium">{{ $message }}</p> 
+                            <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> 
                         @enderror
                     </div>
 
                     <!-- Phone Number Field -->
                     <div>
-                        <label for="number" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 tracking-wide">
+                        <label for="number" class="block text-sm font-semibold text-gray-700 mb-1.5 tracking-wide">
                             Phone Number
                         </label>
                         <input wire:model.debounce.500ms="number" type="tel" id="number" 
                             inputmode="numeric" pattern="[0-9]*"
-                            class="block w-full px-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white sm:text-sm transition-all duration-200 @error('number') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
+                            class="block w-full px-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 sm:text-sm transition-all duration-200 @error('number') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
                             placeholder="e.g. 054 123 4567"
                             onkeypress="return /[0-9]/.test(String.fromCharCode(event.which))">
                         @error('number') 
-                            <p class="mt-1 text-xs text-red-600 dark:text-red-400 font-medium">{{ $message }}</p> 
+                            <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> 
                         @enderror
                     </div>
 
                     <!-- Amount Field -->
                     <div>
-                        <label for="amount" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 tracking-wide">
+                        <label for="amount" class="block text-sm font-semibold text-gray-700 mb-1.5 tracking-wide">
                             Amount (GHS)
                         </label>
                         <div class="relative">
@@ -138,25 +138,25 @@
                             </div>
                             <input wire:model.debounce.500ms="amount" type="text" id="amount" 
                                 inputmode="numeric" pattern="[0-9]*"
-                                class="block w-full pl-9 pr-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white sm:text-lg font-medium transition-all duration-200 @error('amount') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
+                                class="block w-full pl-9 pr-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 sm:text-lg font-medium transition-all duration-200 @error('amount') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
                                 placeholder="0.00" 
                                 oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                         @error('amount') 
-                            <p class="mt-1 text-xs text-red-600 dark:text-red-400 font-medium">{{ $message }}</p> 
+                            <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> 
                         @enderror
                     </div>
 
                     <!-- Message Field -->
                     <div>
-                        <label for="message" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 tracking-wide">
+                        <label for="message" class="block text-sm font-semibold text-gray-700 mb-1.5 tracking-wide">
                             Message for the Couple
                         </label>
                         <textarea wire:model="message" id="message" rows="3"
-                            class="block w-full px-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white sm:text-sm transition-all duration-200 @error('message') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
+                            class="block w-full px-4 py-3.5 rounded-xl border-gray-200 focus:border-[#FFDAB9] focus:ring-[#FFDAB9] bg-orange-50/30 sm:text-sm transition-all duration-200 @error('message') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror placeholder-gray-400 shadow-xs" 
                             placeholder="Write a wish for the couple..."></textarea>
                         @error('message') 
-                            <p class="mt-1 text-xs text-red-600 dark:text-red-400 font-medium">{{ $message }}</p> 
+                            <p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p> 
                         @enderror
                     </div>
                 </div>
@@ -178,7 +178,7 @@
                         </span>
                     </button>
                     
-                    <p class="mt-4 text-center text-xs text-gray-400 dark:text-gray-500">
+                    <p class="mt-4 text-center text-xs text-gray-400">
                         <svg class="inline w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                         </svg>
