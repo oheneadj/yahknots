@@ -1838,7 +1838,7 @@
     <header class="w-full lg:max-w-4xl max-w-md px-4 text-sm mb-6 not-has-[nav]:hidden relative z-10">
 
     </header>
-    <main class="w-full lg:max-w-4xl max-w-md px-4 relative z-10">
+    <main class="w-full lg:max-w-4xl max-w-md relative z-10">
         @livewire('payment-form')
     </main>
 

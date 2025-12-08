@@ -20,9 +20,35 @@
                 Send another gift
             </button>
         </div>
+        @elseif($paymentStatus === 'processing')
+        <!-- Processing State -->
+        <div class="px-8 py-12 flex flex-col items-center justify-center text-center">
+            <div class="relative w-24 h-24 mb-6">
+                <!-- Outer Ring -->
+                <div class="absolute inset-0 border-4 border-orange-100 rounded-full"></div>
+                <!-- Spinning Ring -->
+                <div class="absolute inset-0 border-4 border-[#FFDAB9] rounded-full border-t-transparent animate-spin"></div>
+                <!-- Icon -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-[#d9aa6c] animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-gray-900 font-serif mb-2 tracking-wide">
+                Processing Payment
+            </h2>
+            <p class="text-gray-500 font-medium animate-pulse">
+                Please wait while we confirm your transaction...
+            </p>
+            <p class="text-sm text-gray-400 mt-4 max-w-xs mx-auto">
+                Check your phone for a prompt to authorize the payment.
+            </p>
+        </div>
         @else
         <!-- Header -->
-        <div class="px-6 py-6 border-b border-orange-100 bg-orange-50/50">
+        <div class="px-8 py-6 border-b border-orange-100 bg-orange-50/50">
             <div class="flex items-center gap-4">
                 <div class="h-10 w-10 bg-[#FFDAB9] rounded-full flex items-center justify-center shrink-0 shadow-sm border border-orange-200">
                     <svg class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -42,7 +68,7 @@
             </div>
         </div>
 
-        <div class="p-6">
+        <div class="p-8">
             @if($paymentStatus === 'error')
             <div class="mb-6 bg-red-50 border border-red-100 rounded-xl p-4 animate-pulse">
                 <div class="flex items-start gap-3">
