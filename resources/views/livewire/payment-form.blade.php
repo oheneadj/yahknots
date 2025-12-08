@@ -1,6 +1,25 @@
 <div class="min-h-screen flex items-center justify-center py-6 sm:px-4 lg:px-8 dark:bg-neutral-900">
     <div class="max-w-md w-full dark:bg-neutral-800 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xs border border-orange-100 dark:border-neutral-700 overflow-hidden">
         
+        @if($paymentStatus === 'success')
+        <!-- Success State -->
+        <div class="px-6 py-8 flex flex-col items-center justify-center text-center">
+            <div class="h-24 w-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 animate-bounce">
+                <svg class="h-12 w-12 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white font-serif mb-3 tracking-wide">
+                Thank You!
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 font-medium mb-8">
+                Your contribution has been received with love.
+            </p>
+            <button type="button" wire:click="resetForm" class="text-sm text-[#d9aa6c] hover:text-[#c4965b] font-bold uppercase tracking-widest underline decoration-2 underline-offset-4 transition-colors">
+                Send another gift
+            </button>
+        </div>
+        @else
         <!-- Header -->
         <div class="px-6 py-6 border-b border-orange-100 dark:border-neutral-700 bg-orange-50/50 dark:bg-neutral-800/50">
             <div class="flex items-center gap-4">
@@ -16,11 +35,32 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
                         Thank you for celebrating with us.
                     </p>
+                      {{ json_encode($response) }}
                 </div>
             </div>
         </div>
 
         <div class="p-6">
+            @if($paymentStatus === 'error')
+            <div class="mb-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/50 rounded-xl p-4 animate-pulse">
+                <div class="flex items-start gap-3">
+                     <div class="shrink-0 mt-0.5">
+                        <svg class="h-5 w-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                     </div>
+                     <div class="flex-1">
+                        <p class="text-sm text-red-800 dark:text-red-200 font-bold">{{ $errorMessage }}</p>
+                        @if(!app()->environment('production') && $detailedError)
+                            <div class="mt-2 text-xs text-red-600 dark:text-red-400 font-mono break-all bg-red-100/50 dark:bg-red-900/20 p-2 rounded border border-red-200 dark:border-red-800">
+                                {{ $detailedError }}
+                            </div>
+                        @endif
+                     </div>
+                </div>
+            </div>
+            @endif
+
             <form wire:submit.prevent="processPayment" class="space-y-6">
                 
                 <!-- Network Selection -->
@@ -144,8 +184,10 @@
                         </svg>
                         Secure payment processing
                     </p>
+                  
                 </div>
             </form>
         </div>
+        @endif
     </div>
 </div>

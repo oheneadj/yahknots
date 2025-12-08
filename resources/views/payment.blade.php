@@ -13,7 +13,7 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=lato:400,700,900" rel="stylesheet" />
 
     @vite('resources/css/app.css') @vite('resources/js/app.js')
 
@@ -24,7 +24,7 @@
 
             :root,
             :host {
-                --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                --font-sans: 'Lato', ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
                 --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
                 --color-green-600: oklch(.627 .194 149.214);
                 --color-gray-900: oklch(.21 .034 264.665);
