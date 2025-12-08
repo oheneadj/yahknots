@@ -73,18 +73,28 @@ class PaymentForm extends Component
             $this->response = $response->json();
 
             // Update transaction with immediate response
+            $responseCode = $this->response['responseCode'] ?? $response->status();
+            $status = 'failed';
+
+            if ($response->successful() && $responseCode === '0001') {
+                $status = 'pending';
+            } elseif ($response->successful() && $responseCode === '0000') {
+                 $status = 'success';
+            }
+
             $transaction->update([
-                'status' => $response->successful() && isset($this->response['responseCode']) && $this->response['responseCode'] === '0001' ? 'success' : 'failed',
-                'response_code' => $this->response['responseCode'] ?? $response->status(),
+                'status' => $status,
+                'response_code' => $responseCode,
                 'response_body' => $this->response,
                 'transaction_id' => $this->response['data']['transactionId'] ?? null,
             ]);
 
-            if ($transaction->status === 'success') {
+            if ($status === 'success') {
                 $this->paymentStatus = 'success';
+            } elseif ($status === 'pending') {
+                $this->paymentStatus = 'processing';
             } else {
                 $this->paymentStatus = 'error';
-                $responseCode = $this->response['responseCode'] ?? null;
                 $this->errorMessage = $this->getFailureMessage($responseCode);
                 $this->detailedError = 'Status: ' . $response->status() . ' - Body: ' . $response->body();
             }
