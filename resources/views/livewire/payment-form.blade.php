@@ -36,6 +36,8 @@
                     <p class="text-sm text-gray-500 font-medium">
                         Thank you for celebrating with us.
                     </p>
+
+                    {{ json_encode($response) }}
                 </div>
             </div>
         </div>
