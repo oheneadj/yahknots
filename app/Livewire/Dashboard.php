@@ -13,6 +13,24 @@ class Dashboard extends Component
 
     public $showModal = false;
     public $selectedTransaction = null;
+    public $search = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
 
     #[Computed]
     public function stats()
@@ -53,13 +71,34 @@ class Dashboard extends Component
     #[Computed]
     public function paginator()
     {
-        return Transaction::latest()->paginate(10);
+        return Transaction::query()
+            ->when($this->search, function ($query) {
+                $query->where('client_reference', 'like', '%' . $this->search . '%')
+                    ->orWhere('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('network', 'like', '%' . $this->search . '%')
+                    ->orWhere('status', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
     }
 
     #[Computed]
     public function rows()
     {
         return $this->paginator->getCollection()->map(function ($transaction) {
+            $networkClass = '';
+            $network = strtolower($transaction->network);
+            
+            if (str_contains($network, 'mtn')) {
+                $networkClass = 'bg-yellow-100 text-yellow-800 border-yellow-200';
+            } elseif (str_contains($network, 'vodafone') || str_contains($network, 'telecel')) {
+                $networkClass = 'bg-red-100 text-red-800 border-red-200';
+            } elseif (str_contains($network, 'tigo') || str_contains($network, 'airtel')) {
+                $networkClass = 'bg-blue-100 text-blue-800 border-blue-200';
+            } else {
+                $networkClass = 'bg-gray-100 text-gray-800 border-gray-200';
+            }
+
             return [
                 'id' => $transaction->id,
                 'client_reference' => $transaction->client_reference,
@@ -73,6 +112,8 @@ class Dashboard extends Component
                 'customer' => $transaction->name,
                 'purchase' => ucfirst($transaction->network) . ' (' . $transaction->number . ')',
                 'amount' => 'GH₵ ' . number_format($transaction->amount, 2),
+                'network' => strtoupper($transaction->network),
+                'network_class' => $networkClass,
                 'original' => $transaction // Keep reference to original model for modal actions
             ];
         });
