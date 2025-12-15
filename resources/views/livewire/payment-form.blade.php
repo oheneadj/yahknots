@@ -1,7 +1,6 @@
 <div class="min-h-screen flex items-center justify-center py-6 sm:px-4 lg:px-8">
     <div class="max-w-md w-full bg-white/95 backdrop-blur-sm rounded-2xl shadow-xs border border-orange-100 overflow-hidden"
     @if($clientReference && $paymentStatus !== 'success') wire:poll.3s="checkTransactionStatus" @endif>
-        
         @if($paymentStatus === 'success')
         <!-- Success State -->
         <div class="px-6 py-8 flex flex-col items-center justify-center text-center">
@@ -45,7 +44,6 @@
             <p class="text-sm text-gray-400 mt-4 max-w-xs mx-auto">
                 Check your phone for a prompt to authorize the payment.
             </p>
-             {{ json_encode($response) }}
         </div>
         @else
         <!-- Header -->
@@ -79,7 +77,6 @@
                      <div class="flex-1">
                         <p class="text-sm text-red-800 font-bold">{{ $errorMessage }}</p>
                         <p class="text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
-                            {{ json_encode($response) }}
                         </p>
                         @if(!app()->environment('production') && $detailedError)
                             <div class="mt-2 text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
