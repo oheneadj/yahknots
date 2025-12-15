@@ -38,9 +38,6 @@ class PaymentForm extends Component
         $this->detailedError = '';
 
         $description = "eGift-Table";
-        if ($this->message) {
-            $description .= ": " . $this->message;
-        }
 
         $this->clientReference = uniqid('UMB_', true);
 

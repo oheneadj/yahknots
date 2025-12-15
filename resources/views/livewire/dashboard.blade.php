@@ -152,10 +152,10 @@
     @if($showModal)
         <div class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <!-- Background backdrop, show/hide based on modal state. -->
-            <div class="fixed inset-0 bg-gray-900/75 backdrop-blur-md transition-opacity" 
+            <div class="fixed inset-0 z-40 bg-gray-900 bg-opacity-75 backdrop-blur-md transition-opacity" 
                  wire:click="closeModal"></div>
 
-            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="fixed inset-0 z-50 w-screen overflow-y-auto">
                 <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                     <!-- Modal panel -->
                     <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
