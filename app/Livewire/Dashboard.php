@@ -74,11 +74,12 @@ class Dashboard extends Component
         return Transaction::query()
             ->when($this->search, function ($query) {
                 $query->where('client_reference', 'like', '%' . $this->search . '%')
-                    ->orWhere('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('customer_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('customer_number', 'like', '%' . $this->search . '%')
                     ->orWhere('network', 'like', '%' . $this->search . '%')
                     ->orWhere('status', 'like', '%' . $this->search . '%');
             })
-            ->orderBy($this->sortField, $this->sortDirection)
+            ->orderBy($this->sortField === 'name' ? 'customer_name' : $this->sortField, $this->sortDirection)
             ->paginate(10);
     }
 
@@ -109,8 +110,8 @@ class Dashboard extends Component
                     'pending' => 'orange',
                     default => 'red',
                 },
-                'customer' => $transaction->name,
-                'purchase' => ucfirst($transaction->network) . ' (' . $transaction->number . ')',
+                'customer' => $transaction->customer_name,
+                'purchase' => ucfirst($transaction->network) . ' (' . $transaction->customer_number . ')',
                 'amount' => 'GH₵ ' . number_format($transaction->amount, 2),
                 'network' => strtoupper($transaction->network),
                 'network_class' => $networkClass,

@@ -56,7 +56,7 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-gray-900 font-serif tracking-wide">
-                        Wedding Contribution
+                       Virtual Gift Table
                     </h2>
                     <p class="text-sm text-gray-500 font-medium">
                         Thank you for celebrating with us.
