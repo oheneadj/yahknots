@@ -4,13 +4,7 @@
             <i class="fa-solid fa-bars"></i>
         </button>
         <div class="relative hidden sm:block">
-            <div class="bg-white shadow-sm p-1 rounded-xl flex items-center">
-                <i class="fa-solid fa-magnifying-glass text-gray-400 ml-3"></i>
-                <input type="text" placeholder="Search..."
-                    class="pl-3 pr-4 py-1.5 bg-transparent border-none text-sm focus:ring-0 w-64">
-                <span class="text-xs text-gray-400 border border-gray-200 rounded px-1.5 py-0.5 mr-1">⌘
-                    K</span>
-            </div>
+            eGift table
         </div>
     </div>
 
@@ -29,25 +23,34 @@
         <div class="h-8 w-px bg-gray-200 mx-2"></div>
 
         <!-- Profile Dropdown -->
-        <div class="relative">
-            <button id="profileBtn" onclick="togglePopup('profileDropdown')"
+        <div class="relative" x-data="{ open: false }">
+            <button @click="open = !open" @click.outside="open = false"
                 class="flex items-center gap-2 hover:bg-gray-50 rounded-lg p-1 transition-colors">
                 <img src="{{ Auth::user()->avatar ? Storage::url(Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=random' }}"
                     alt="User" class="w-8 h-8 rounded-full">
                 <span class="text-sm font-medium text-gray-700 hidden sm:block">{{ Auth::user()->name }}</span>
-                <i class="fa-solid fa-chevron-down text-xs text-gray-400 hidden sm:block"></i>
+                <i class="fa-solid fa-chevron-down text-xs text-gray-400 hidden sm:block transition-transform duration-200"
+                    :class="{'rotate-180': open}"></i>
             </button>
 
-            <div id="profileDropdown"
-                class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50 popup-content">
+            <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="transform opacity-0 scale-95"
+                x-transition:enter-end="transform opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="transform opacity-100 scale-100"
+                x-transition:leave-end="transform opacity-0 scale-95"
+                class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50 origin-top-right"
+                style="display: none;">
                 <div class="px-4 py-3 border-b border-gray-50">
                     <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name }}</p>
                     <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                 </div>
-                <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">
+                <a href="{{ route('profile.edit') }}"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">
                     <i class="fa-regular fa-user w-5"></i> View Profile
                 </a>
-                <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">
+                <a href="{{ route('appearance.edit') }}"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">
                     <i class="fa-solid fa-gear w-5"></i> Settings
                 </a>
                 <div class="border-t border-gray-50 my-1"></div>
