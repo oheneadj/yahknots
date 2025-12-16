@@ -172,6 +172,81 @@ class Dashboard extends Component
         $this->selectedTransaction = null;
     }
 
+    public $showExportModal = false;
+    public $exportNetwork = '';
+    public $exportStatus = '';
+
+    public function openExportModal()
+    {
+        $this->showExportModal = true;
+    }
+
+    public function closeExportModal()
+    {
+        $this->showExportModal = false;
+        $this->exportNetwork = '';
+        $this->exportStatus = '';
+    }
+
+    public function export()
+    {
+        return response()->streamDownload(function () {
+            $csv = fopen('php://output', 'w');
+            
+            // Header
+            fputcsv($csv, ['Date', 'Customer', 'Phone', 'Network', 'Status', 'Amount', 'Reference', 'Message']);
+
+            // Query
+            $query = Transaction::query()->orderBy('created_at', 'desc');
+
+            // Apply Network Filter
+            if ($this->exportNetwork) {
+                 $network = $this->exportNetwork;
+                 if ($network === 'MTN-GH') {
+                    $query->where('network', 'like', '%mtn%');
+                } elseif ($network === 'VODAFONE-GH') {
+                    $query->where(function($q) {
+                        $q->where('network', 'like', '%vodafone%')
+                          ->orWhere('network', 'like', '%telecel%');
+                    });
+                } elseif ($network === 'TIGO-GH') {
+                    $query->where(function($q) {
+                        $q->where('network', 'like', '%tigo%')
+                          ->orWhere('network', 'like', '%airtel%');
+                    });
+                } else {
+                    $query->where('network', $network);
+                }
+            }
+
+            // Apply Status Filter
+            if ($this->exportStatus) {
+                if ($this->exportStatus === 'failed') {
+                    $query->whereIn('status', ['failed', 'error']);
+                } else {
+                    $query->where('status', $this->exportStatus);
+                }
+            }
+
+            $query->chunk(1000, function ($transactions) use ($csv) {
+                foreach ($transactions as $transaction) {
+                    fputcsv($csv, [
+                        $transaction->created_at->format('Y-m-d H:i:s'),
+                        $transaction->customer_name,
+                        $transaction->customer_number,
+                        $transaction->network,
+                        $transaction->status,
+                        $transaction->amount,
+                        $transaction->client_reference,
+                        $transaction->message
+                    ]);
+                }
+            });
+
+            fclose($csv);
+        }, 'transactions-export-' . now()->format('Y-m-d-His') . '.csv');
+    }
+
     public function render()
     {
         return view('livewire.dashboard');

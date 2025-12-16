@@ -98,6 +98,13 @@
                     </div>
                 </div>
 
+                <!-- Export Button -->
+                <button wire:click="openExportModal" 
+                        class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-full shadow-lg shadow-indigo-200 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download"></i>
+                    Export
+                </button>
+
                 <!-- Search Bar (Pill shape) -->
                 <div class="relative w-full md:w-72 group">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -353,4 +360,118 @@
             </div>
         </div>
     @endif
+
+    <!-- Export Modal -->
+    @if($showExportModal)
+        <div class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div wire:transition.opacity.duration.300ms class="fixed inset-0 z-40 bg-gray-900/10 backdrop-blur-md transition-opacity" 
+                 wire:click="closeExportModal"></div>
+
+            <div class="fixed inset-0 z-50 w-screen overflow-y-auto">
+                <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                    <div wire:transition.scale.opacity.duration.300ms class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-md">
+                        
+                        <div class="bg-gray-50 px-6 py-6 border-b border-gray-100 flex justify-between items-center">
+                            <h3 class="text-xl font-bold text-gray-800">Export Transactions</h3>
+                            <button wire:click="closeExportModal" class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="px-6 py-8 space-y-6">
+                            
+                            <!-- Filters -->
+                            <div class="space-y-4">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700">Network</label>
+                                    <div class="relative">
+                                        <select wire:model="exportNetwork" class="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-gray-700">
+                                            <option value="">All Networks</option>
+                                            <option value="MTN-GH">MTN</option>
+                                            <option value="VODAFONE-GH">Vodafone</option>
+                                            <option value="TIGO-GH">AirtelTigo</option>
+                                        </select>
+                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700">Status</label>
+                                    <div class="relative">
+                                        <select wire:model="exportStatus" class="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-gray-700">
+                                            <option value="">All Statuses</option>
+                                            <option value="success">Paid</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="failed">Failed</option>
+                                        </select>
+                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                            <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100">
+                                <p class="text-xs text-indigo-700 text-center">
+                                    <i class="fa-solid fa-circle-info mr-1"></i>
+                                    Leave filters as "All" to export everything.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+                            <button wire:click="closeExportModal" class="px-5 py-2.5 text-gray-500 font-bold hover:text-gray-700 transition-colors">
+                                Cancel
+                            </button>
+                            <button wire:click="export" 
+                                    @click="$dispatch('notify', { message: 'Export initiated! Your download will start shortly.' }); $wire.set('showExportModal', false)"
+                                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all transform hover:scale-105 flex items-center gap-2">
+                                <i class="fa-solid fa-file-csv"></i>
+                                Download CSV
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Toast Notification -->
+    <div wire:ignore 
+         x-data="{ show: false, message: '' }" 
+         x-on:notify.window="show = true; message = $event.detail.message; setTimeout(() => show = false, 4000)" 
+         class="fixed bottom-6 right-6 z-[999] pointer-events-none max-w-[90vw] sm:max-w-md w-full">
+        <div x-show="show" 
+             x-transition:enter="transform ease-out duration-300 transition"
+             x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+             x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="pointer-events-auto w-full overflow-hidden rounded-xl bg-white shadow-2xl border-l-4 border-green-500 ring-1 ring-black ring-opacity-5">
+            <div class="p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-download text-green-600"></i>
+                        </div>
+                    </div>
+                    <div class="ml-3 w-0 flex-1 pt-0.5">
+                        <p class="text-sm font-bold text-gray-900">Success</p>
+                        <p class="mt-1 text-sm text-gray-500 break-words" x-text="message"></p>
+                    </div>
+                    <div class="ml-4 flex flex-shrink-0">
+                        <button @click="show = false" type="button" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <span class="sr-only">Close</span>
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
