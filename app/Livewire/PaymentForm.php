@@ -39,7 +39,7 @@ class PaymentForm extends Component
 
         $description = "eGift-Table";
 
-        $this->clientReference = uniqid('UMB_', true);
+        $this->clientReference = uniqid('UMB', true);
 
         try {
             // Create pending transaction
