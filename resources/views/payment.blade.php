@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>{{ config('app.name') }}</title>
 
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -1834,7 +1834,7 @@
 <body
     class="min-h-screen flex items-center justify-center bg-gray-50 py-6 px-4 sm:px-6 lg:px-8 dark:bg-neutral-900 bg-cover bg-center bg-no-repeat bg-fixed"
     style="background-image: url('/PEL_9848.jpg');">
-    <div class="absolute inset-0 bg-black/10 dark:bg-black/40 z-0"></div>
+    <div class="fixed inset-0 bg-black/10 dark:bg-black/40 z-0"></div>
     <header class="w-full lg:max-w-4xl max-w-md px-4 text-sm mb-6 not-has-[nav]:hidden relative z-10">
 
     </header>

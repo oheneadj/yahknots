@@ -78,11 +78,9 @@
                         <p class="text-sm text-red-800 font-bold">{{ $errorMessage }}</p>
                         
                         @if(!app()->environment('production') && $detailedError)
-                        <p class="text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
-                        <div class="mt-2 text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
+                            <div class="mt-2 text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
                                 {{ $detailedError }}
                             </div>
-                        </p> 
                         @endif
                      </div>
                 </div>
@@ -96,7 +94,7 @@
                     </label>
                     <div class="grid grid-cols-3 gap-3">
                         @foreach([
-                            'mtn-gh' => '/myn momo.jpeg', 
+                            'mtn-gh' => '/mtn-momo.png', 
                             'vodafone-gh' => '/telecel.jpg', 
                             'tigo-gh' => '/airteltigo money.jpeg'
                         ] as $value => $image)
