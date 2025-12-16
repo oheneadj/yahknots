@@ -16,8 +16,20 @@ class Dashboard extends Component
     public $search = '';
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
+    public $selectedNetwork = '';
+    public $selectedStatus = '';
 
     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedNetwork()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedStatus()
     {
         $this->resetPage();
     }
@@ -73,11 +85,39 @@ class Dashboard extends Component
     {
         return Transaction::query()
             ->when($this->search, function ($query) {
-                $query->where('client_reference', 'like', '%' . $this->search . '%')
-                    ->orWhere('customer_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('customer_number', 'like', '%' . $this->search . '%')
-                    ->orWhere('network', 'like', '%' . $this->search . '%')
-                    ->orWhere('status', 'like', '%' . $this->search . '%');
+                $query->where(function ($q) {
+                    $q->where('client_reference', 'like', '%' . $this->search . '%')
+                        ->orWhere('customer_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('customer_number', 'like', '%' . $this->search . '%')
+                        ->orWhere('network', 'like', '%' . $this->search . '%')
+                        ->orWhere('status', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->selectedNetwork, function ($query) {
+                $network = $this->selectedNetwork;
+                if ($network === 'MTN-GH') {
+                    $query->where('network', 'like', '%mtn%');
+                } elseif ($network === 'VODAFONE-GH') {
+                    $query->where(function($q) {
+                        $q->where('network', 'like', '%vodafone%')
+                          ->orWhere('network', 'like', '%telecel%');
+                    });
+                } elseif ($network === 'TIGO-GH') {
+                    $query->where(function($q) {
+                        $q->where('network', 'like', '%tigo%')
+                          ->orWhere('network', 'like', '%airtel%');
+                    });
+                } else {
+                    $query->where('network', $network);
+                }
+            })
+            ->when($this->selectedStatus, function ($query) {
+                // If status is 'failed', include 'error' status as well
+                if ($this->selectedStatus === 'failed') {
+                    $query->whereIn('status', ['failed', 'error']);
+                } else {
+                    $query->where('status', $this->selectedStatus);
+                }
             })
             ->orderBy($this->sortField === 'name' ? 'customer_name' : $this->sortField, $this->sortDirection)
             ->paginate(10);

@@ -67,14 +67,46 @@
                 <p class="text-sm text-gray-400 mt-1">Monitor your latest payments</p>
             </div>
 
-            <!-- Search Bar (Pill shape) -->
-            <div class="relative w-full md:w-72 group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-indigo-500 transition-colors"></i>
+            <!-- Actions Group -->
+            <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                
+                <!-- Network Filter -->
+                <div class="relative">
+                    <select wire:model.live="selectedNetwork" 
+                            class="appearance-none pl-4 pr-10 py-3 bg-gray-50 border-none rounded-full text-sm font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all shadow-inner cursor-pointer w-full sm:w-auto">
+                        <option value="">All Networks</option>
+                        <option value="MTN-GH">MTN</option>
+                        <option value="VODAFONE-GH">Vodafone</option>
+                        <option value="TIGO-GH">AirtelTigo</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                    </div>
                 </div>
-                <input wire:model.live.debounce.300ms="search" type="text"
-                    class="block w-full pl-11 pr-4 py-3 border-none bg-gray-50 rounded-full text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all duration-200 shadow-inner"
-                    placeholder="Search transaction...">
+
+                <!-- Status Filter -->
+                <div class="relative">
+                    <select wire:model.live="selectedStatus" 
+                            class="appearance-none pl-4 pr-10 py-3 bg-gray-50 border-none rounded-full text-sm font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all shadow-inner cursor-pointer w-full sm:w-auto">
+                        <option value="">All Statuses</option>
+                        <option value="success">Paid</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Search Bar (Pill shape) -->
+                <div class="relative w-full md:w-72 group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                    </div>
+                    <input wire:model.live.debounce.300ms="search" type="text"
+                        class="block w-full pl-11 pr-4 py-3 border-none bg-gray-50 rounded-full text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all duration-200 shadow-inner"
+                        placeholder="Search transaction...">
+                </div>
             </div>
         </div>
 
