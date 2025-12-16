@@ -76,20 +76,19 @@
                      </div>
                      <div class="flex-1">
                         <p class="text-sm text-red-800 font-bold">{{ $errorMessage }}</p>
-                        <p class="text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
-                        </p>
+                        
                         @if(!app()->environment('production') && $detailedError)
-                            <div class="mt-2 text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
+                        <p class="text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
+                        <div class="mt-2 text-xs text-red-600 font-mono break-all bg-red-100/50 p-2 rounded border border-red-200">
                                 {{ $detailedError }}
                             </div>
+                        </p> 
                         @endif
                      </div>
                 </div>
             </div>
             @endif
-
             <form wire:submit.prevent="processPayment" class="space-y-6">
-                
                 <!-- Network Selection -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-3 tracking-wide">
