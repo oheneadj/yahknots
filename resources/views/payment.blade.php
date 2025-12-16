@@ -1833,7 +1833,7 @@
 
 <body
     class="min-h-screen flex items-center justify-center bg-gray-50 py-6 px-4 sm:px-6 lg:px-8 dark:bg-neutral-900 bg-cover bg-center bg-no-repeat bg-fixed"
-    style="background-image: url('/PEL_9848.jpg');">
+    style="background-image: url('/PEL_9848.webp');">
     <div class="fixed inset-0 bg-black/10 dark:bg-black/40 z-0"></div>
     <header class="w-full lg:max-w-4xl max-w-md px-4 text-sm mb-6 not-has-[nav]:hidden relative z-10">
 
