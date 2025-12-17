@@ -12,6 +12,10 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('home');
 
+Route::get('/register', function () {
+    return redirect()->route('login');
+})->name('home');
+
 Route::get('/payment', [PaymentController::class,'index'])->name('payment');
 Route::post('/payment/callback', [\App\Http\Controllers\PaymentController::class, 'handleCallback'])->name('payment.callback');
 
