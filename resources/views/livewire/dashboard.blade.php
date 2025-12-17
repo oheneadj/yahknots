@@ -118,74 +118,82 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-separate border-spacing-y-2">
                 <thead>
-                    <tr class="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
-                        <th class="py-4 pl-4 cursor-pointer hover:text-indigo-600 transition-colors" wire:click="sortBy('name')">
+                    <tr class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">
+                        <th class="py-3 pl-6 cursor-pointer hover:text-indigo-600 transition-colors" wire:click="sortBy('name')">
                             Customer / Date
-                            @if($sortField === 'name') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i> @endif
+                            @if($sortField === 'name') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1 text-[10px]"></i> @endif
                         </th>
-                        <th class="py-4 cursor-pointer hover:text-indigo-600 transition-colors" wire:click="sortBy('network')">
+                        <th class="py-3 cursor-pointer hover:text-indigo-600 transition-colors" wire:click="sortBy('network')">
                             Network
-                            @if($sortField === 'network') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i> @endif
+                            @if($sortField === 'network') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1 text-[10px]"></i> @endif
                         </th>
-                        <th class="py-4 cursor-pointer hover:text-indigo-600 transition-colors max-md:hidden" wire:click="sortBy('status')">
+                        <th class="py-3 cursor-pointer hover:text-indigo-600 transition-colors max-md:hidden" wire:click="sortBy('status')">
                             Status
-                            @if($sortField === 'status') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i> @endif
+                            @if($sortField === 'status') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1 text-[10px]"></i> @endif
                         </th>
-                        <th class="py-4 text-right pr-6 cursor-pointer hover:text-indigo-600 transition-colors" wire:click="sortBy('amount')">
+                        <th class="py-3 text-right pr-10 cursor-pointer hover:text-indigo-600 transition-colors" wire:click="sortBy('amount')">
                             Amount
-                            @if($sortField === 'amount') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1"></i> @endif
+                            @if($sortField === 'amount') <i class="fa-solid fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ml-1 text-[10px]"></i> @endif
                         </th>
-                        <th class="py-4 pr-4 text-center w-24">Action</th>
+                        <th class="py-3 pr-6 text-center w-48">Action</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm">
                     @forelse ($this->rows as $row)
-                        <tr class="group hover:bg-indigo-50/30 transition-colors border-b border-gray-50 last:border-none">
-                            <td class="py-4 pl-4">
+                        <tr class="group hover:bg-indigo-50/40 transition-all duration-200 border-b border-gray-50 last:border-none">
+                            <td class="py-5 pl-6">
                                 <div class="flex items-center gap-4">
                                     <div class="relative">
-                                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold border-2 border-white shadow-sm ring-1 ring-gray-100 group-hover:ring-indigo-100 transition-all">
+                                        <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold border border-indigo-100 shadow-sm transition-all group-hover:scale-110">
                                             {{ substr($row['customer'], 0, 1) }}
                                         </div>
                                         @if($row['original']->status === 'success')
-                                            <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                                            <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white shadow-sm ring-1 ring-green-100"></div>
                                         @endif
                                     </div>
                                     <div>
-                                        <p class="font-bold text-gray-800 group-hover:text-indigo-700 transition-colors">{{ $row['customer'] }}</p>
+                                        <p class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $row['customer'] }}</p>
                                         <p class="text-xs text-gray-400 font-medium mt-0.5">{{ $row['date'] }}</p>
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-4">
+                            <td class="py-5">
                                 @php
-                                   
                                     $netClass = match($row['network']) {
-                                        'MTN-GH' => 'bg-yellow-100 text-yellow-700',
-                                        'VODAFONE-GH' => 'bg-red-100 text-red-700',
-                                        'TIGO-GH' => 'bg-blue-100 text-blue-700',
-                                        default => 'bg-gray-100 text-gray-600'
+                                        'MTN-GH' => 'bg-yellow-50 text-yellow-700 border-yellow-100',
+                                        'VODAFONE-GH' => 'bg-red-50 text-red-700 border-red-100',
+                                        'TIGO-GH' => 'bg-blue-50 text-blue-700 border-blue-100',
+                                        default => 'bg-gray-50 text-gray-600 border-gray-100'
                                     };
                                 @endphp
-                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold {{ $netClass }}">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-60"></span>
+                                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold border {{ $netClass }}">
+                                    <span class="w-1 h-1 rounded-full bg-current opacity-60"></span>
                                     {{ $row['network'] }}
                                 </span> 
                             </td>
-                            <td class="py-4 max-md:hidden">
-                                <span class="inline-flex font-bold text-xs {{ $row['status'] === 'Paid' ? 'text-green-600 px-2 py-1 bg-green-100 rounded-full' : ($row['status'] === 'Pending' ? 'text-amber-600 px-2 py-1 bg-amber-100 rounded-full' : 'text-red-500 px-2 py-1 bg-red-100 rounded-full') }}">
+                            <td class="py-5 max-md:hidden">
+                                @php
+                                    $statusClass = match(strtolower($row['status'])) {
+                                        'paid' => 'bg-green-100 text-green-700 border-green-200',
+                                        'pending' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                        'failed' => 'bg-red-100 text-red-700 border-red-200',
+                                        default => 'bg-gray-100 text-gray-600 border-gray-200'
+                                    };
+                                @endphp
+                                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border {{ $statusClass }}">
                                     {{ $row['status'] }}
                                 </span>
                             </td>
-                            <td class="py-4 text-right pr-6">
-                                <span class="font-black text-gray-900 group-hover:text-indigo-700 transition-colors">{{ $row['amount'] }}</span>
+                            <td class="py-5 text-right pr-10">
+                                <span class="font-extrabold text-gray-900 group-hover:text-indigo-600 transition-colors text-base">{{ $row['amount'] }}</span>
                             </td>
-                            <td class="py-4 pr-4 text-center">
+                            <td class="py-5 pr-6 text-center">
                                 <button wire:click="viewTransaction({{ $row['id'] }})"
-                                    class="w-8 h-8 mx-auto rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all flex items-center justify-center shadow-sm hover:shadow-md hover:shadow-indigo-200">
-                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                    class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-indigo-600 text-white border border-indigo-100 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-200 shadow-sm hover:shadow-indigo-100 group/btn">
+                                    <span class="text-xs font-bold">View Details</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                                 </button>
                             </td>
                         </tr>
